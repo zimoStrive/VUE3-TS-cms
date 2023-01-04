@@ -36,15 +36,20 @@
 <script setup lang="ts">
 import PanelPhone from './panel-phone.vue'
 import PanelAccount from './panel-account.vue'
-import { ref } from 'vue'
-const isKeep = ref(false)
+import { ref, watch } from 'vue'
+import { localCache } from '../../../utils/cache'
+
 const currentTab = ref('account')
+const isKeep = ref<boolean>(localCache.getCache('rem_pwd'))
+watch(isKeep, (newVal) => {
+  localCache.setCache('rem_pwd', newVal)
+})
 
 const accountRef = ref<InstanceType<typeof PanelAccount>>()
 
 function loginAction() {
-  console.log('登录')
-  accountRef.value?.loginAction()
+  console.log('登录') 
+  accountRef.value?.loginAction(isKeep.value)
 }
 </script>
 

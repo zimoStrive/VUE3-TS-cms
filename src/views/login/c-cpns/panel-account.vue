@@ -15,10 +15,11 @@ import { ElMessage } from 'element-plus'
 import type { FormRules, FormInstance } from 'element-plus'
 import useLoginStore from '../../../store/login/index'
 import type { IAccount } from '@/types'
+import { localCache } from '../../../utils/cache'
 
 const account = reactive<IAccount>({
-  name: '',
-  password: ''
+  name: localCache.getCache('name') ?? '',
+  password: localCache.getCache('password') ?? ''
 })
 
 // 定义form的验证规则
@@ -36,7 +37,7 @@ const accountRules: FormRules = {
 // 定义登录逻辑
 const formRef = ref<FormInstance>()
 const loginStore = useLoginStore()
-function loginAction() {
+function loginAction(isKeep: boolean) {
   formRef.value?.validate((valid) => {
     //是否通过验证
     if (valid) {
@@ -44,8 +45,16 @@ function loginAction() {
       const password = account.password
       //登录操作
       loginStore.accountLoginAction({ name, password })
+      //记住密码
+      if (isKeep) {
+        localCache.setCache('name', name)
+        localCache.setCache('password', password)
+      } else {
+        localCache.deleteCache('name')
+        localCache.deleteCache('password')
+      }
     } else {
-      ElMessage.error('错误')
+      ElMessage.warning({ message: '账号或者密码输入的规则错误~' })
     }
   })
 }
