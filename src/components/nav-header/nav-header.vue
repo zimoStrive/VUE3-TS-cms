@@ -5,11 +5,15 @@
         <component :is="isFold ? 'Expand' : 'Fold'" />
       </el-icon>
     </div>
-    <div class="content">哈哈哈</div>
+    <div class="content">
+      <div>哈哈哈</div>
+      <headerInfo />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts" name="nav-header">
+import headerInfo from './c-cpns/header-info.vue'
 import { ref } from 'vue'
 const isFold = ref(false)
 
