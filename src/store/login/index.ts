@@ -2,7 +2,6 @@ import { accountLogin, getUserById, getRoleMenus } from '@/service/login/login'
 import { defineStore } from 'pinia'
 import type { IAccount } from '@/types'
 import { localCache } from '@/utils/cache'
-import { getUserById } from '../../service/login/login'
 import router from '@/router'
 
 interface ILoginState {
@@ -13,8 +12,8 @@ interface ILoginState {
 const useLoginStore = defineStore('login', {
   state: (): ILoginState => ({
     token: '',
-    userInfo: {},
-    userMenus: []
+    userInfo: localCache.getCache('userInfo') ?? {},
+    userMenus: localCache.getCache('userMenus') ?? []
   }),
 
   actions: {
