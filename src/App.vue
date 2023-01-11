@@ -6,7 +6,7 @@
 
 <script setup lang="ts"></script>
 
-<style scoped>
+<style lang="less" scoped>
 .app {
   width: 100vw;
   height: 100vh;

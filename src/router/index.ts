@@ -6,15 +6,17 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/home'
+      redirect: '/main'
     },
     {
       path: '/login',
+      name: 'login',
       component: () => import('@/views/login/index.vue')
     },
     {
-      path: '/home',
-      component: () => import('@/views/home/index.vue')
+      path: '/main',
+      name: 'main',
+      component: () => import('@/views/main/index.vue')
     },
     {
       path: '/:patcMatch(.*)',
@@ -25,8 +27,8 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   const token = localCache.getCache('token')
-  if (to.path.startsWith('/home') && !token) return '/login'
-  if (to.path === '/login' && token) return '/home'
+  if (to.path.startsWith('/main') && !token) return '/login'
+  if (to.path === '/login' && token) return '/main'
 })
 
 export default router

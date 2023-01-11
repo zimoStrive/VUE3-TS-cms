@@ -18,7 +18,7 @@
             <span>{{ item.name }}</span>
           </template>
           <template v-for="subitem in item.children" :key="subitem.id">
-            <el-menu-item :index="subitem.id + ''">
+            <el-menu-item :index="subitem.id + ''" @click="handleItemClick(subitem)">
               {{ subitem.name }}
             </el-menu-item>
           </template>
@@ -30,6 +30,8 @@
 
 <script setup lang="ts">
 import useLoginStore from '../../store/login'
+import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 // 1.获取菜单数据
 const loginStore = useLoginStore()
@@ -41,6 +43,12 @@ defineProps({
     default: false
   }
 })
+
+//监听item点击
+const router = useRouter()
+function handleItemClick(item: any) {
+  router.push(item.url)
+}
 </script>
 
 <style scoped lang="less">
