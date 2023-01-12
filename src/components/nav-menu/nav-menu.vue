@@ -5,6 +5,7 @@
       <span class="title" v-show="!isFold">弘源管理系统</span>
     </div>
     <el-menu
+      :default-active="defaultActive"
       text-color="#b7bdc3"
       active-text-color="#fff"
       background-color="#001529"
@@ -32,6 +33,7 @@
 import useLoginStore from '../../store/login'
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { mapPathToMenu } from '../../utils/map-menu'
 
 // 1.获取菜单数据
 const loginStore = useLoginStore()
@@ -49,6 +51,11 @@ const router = useRouter()
 function handleItemClick(item: any) {
   router.push(item.url)
 }
+
+//ElMune默认菜单问题
+const route = useRoute()
+const currentMenu = mapPathToMenu(route.path, userMenus)
+const defaultActive = ref(currentMenu.id + '')
 </script>
 
 <style scoped lang="less">

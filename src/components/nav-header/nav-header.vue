@@ -6,7 +6,7 @@
       </el-icon>
     </div>
     <div class="content">
-      <div>哈哈哈</div>
+      <headerCrumb />
       <headerInfo />
     </div>
   </div>
@@ -14,6 +14,7 @@
 
 <script setup lang="ts" name="nav-header">
 import headerInfo from './c-cpns/header-info.vue'
+import headerCrumb from './c-cpns/header-crumb.vue'
 import { ref } from 'vue'
 const isFold = ref(false)
 
