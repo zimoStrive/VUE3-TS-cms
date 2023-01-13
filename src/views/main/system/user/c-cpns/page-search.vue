@@ -18,6 +18,7 @@
             <el-input v-model="userSearchForm.cellphone" placeholder="请输入手机号码" />
           </el-form-item>
         </el-col>
+
         <el-col :span="8">
           <el-form-item label="状态" prop="enable">
             <el-select v-model="userSearchForm.enable" placeholder="请选择状态" style="width: 100%">
@@ -83,7 +84,7 @@ function handleQueryClick() {
   border-radius: 5px;
 
   .el-form-item {
-    padding: 20px 40px;
+    padding: 20px 0;
     margin-bottom: 0;
   }
 }

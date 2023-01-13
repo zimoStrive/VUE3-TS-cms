@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import useLoginStore from '../../store/login'
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { mapPathToMenu } from '../../utils/map-menu'
 
@@ -54,8 +54,10 @@ function handleItemClick(item: any) {
 
 //ElMune默认菜单问题
 const route = useRoute()
-const currentMenu = mapPathToMenu(route.path, userMenus)
-const defaultActive = ref(currentMenu.id + '')
+const defaultActive = computed(() => {
+  const currentMenu = mapPathToMenu(route.path, userMenus)
+  return currentMenu.id + ''
+})
 </script>
 
 <style scoped lang="less">
