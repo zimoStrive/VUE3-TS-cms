@@ -2,7 +2,7 @@
   <div class="content">
     <div class="header">
       <h3 class="title">用户列表</h3>
-      <el-button type="primary">新建用户</el-button>
+      <el-button type="primary" @click="handleAddUser">新建用户</el-button>
     </div>
     <div class="table">
       <el-table :data="usersList" style="width: 100%">
@@ -29,12 +29,31 @@
           </template>
         </el-table-column>
         <el-table-column align="center" prop="address" label="操作" width="180">
-          <el-button type="primary" size="small" icon="EditPen" link>编辑</el-button>
-          <el-button type="danger" size="small" icon="Delete" link>删除</el-button>
+          <template #default="{ row }">
+            <el-button type="primary" size="small" icon="EditPen" link>编辑</el-button>
+            <el-button
+              type="danger"
+              size="small"
+              icon="Delete"
+              link
+              @click="deleteUserClick(row.id)"
+              >删除</el-button
+            >
+          </template>
         </el-table-column>
       </el-table>
     </div>
-    <div class="footer"></div>
+    <div class="pagination">
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :page-sizes="[5, 10, 15, 20]"
+        layout="sizes, prev, pager, next, jumper,total"
+        :total="usersTotalCount"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+      />
+    </div>
   </div>
 </template>
 
@@ -42,14 +61,59 @@
 import useSystemStore from '@/store/main/system/system'
 import { storeToRefs } from 'pinia'
 import { utcFormat } from '@/utils/format'
+import { ref } from 'vue'
 
+const emit = defineEmits(['newDataClick'])
+
+//分页器请求数据
+const currentPage = ref(1)
+const pageSize = ref(5)
 //发起action, 请求userList
 const systemStore = useSystemStore()
-systemStore.getUserListDataAction({ offset: 2, size: 10 })
+
+//获取用户列表的回调
+function getUserList(queryInfo: any = {}) {
+  //获取size和offset
+  const size = pageSize.value
+  const offset = (currentPage.value - 1) * size
+  //带上参数发请求
+  systemStore.getUserListDataAction({ size, offset, ...queryInfo })
+}
+
+getUserList()
 
 //获取userList数据，进行展示
-const { usersList } = storeToRefs(systemStore)
-console.log(usersList)
+const { usersList, usersTotalCount } = storeToRefs(systemStore)
+
+//绑定分页数据
+function handleCurrentChange() {
+  getUserList()
+}
+function handleSizeChange() {
+  getUserList()
+}
+//重置按钮，重置参数
+function handleResetClick() {
+  currentPage.value = 1
+  pageSize.value = 5
+  getUserList()
+}
+
+//删除用户
+function deleteUserClick(id) {
+  systemStore.deleteUserDataAction(id)
+}
+
+//新建用户
+function handleAddUser() {
+  emit('newDataClick')
+}
+
+//暴露查询函数
+defineExpose({
+  handleResetClick,
+  getUserList
+})
 </script>
 
 <style scoped lang="less">
@@ -81,10 +145,10 @@ console.log(usersList)
     }
   }
 
-  .footer {
+  .pagination {
     display: flex;
     justify-content: flex-end;
-    margin-top: 15px;
+    margin-top: 20px;
   }
 }
 </style>
