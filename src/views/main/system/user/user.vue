@@ -3,7 +3,11 @@
     <!-- 1.搜索区域 -->
     <page-search @queryClick="handleQueryClick" @resetClick="handleResetClick" />
     <!-- 2.展示区域 -->
-    <page-content ref="contentRef" @newDataClick="handleNewDataClick" />
+    <page-content
+      ref="contentRef"
+      @newDataClick="handleNewDataClick"
+      @editDataClick="handlerEditClick"
+    />
 
     <!-- 新建和编辑的dialog -->
     <PageModal ref="modalRef" />
@@ -26,7 +30,11 @@ function handleResetClick() {
   contentRef.value?.handleResetClick()
 }
 
-//对content组件的操作
+function handlerEditClick(formData: any) {
+  modalRef.value?.setDialogVisible(true, formData)
+}
+
+//对modal组件的操作
 
 const modalRef = ref<InstanceType<typeof PageModal>>()
 function handleNewDataClick() {

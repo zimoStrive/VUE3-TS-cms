@@ -2,32 +2,19 @@
   <div class="modal">
     <el-dialog
       v-model="centerDialogVisible"
-      :title="isEditRef ? '新建用户' : '编辑用户'"
+      :title="isEditRef ? '新建部门' : '编辑部门'"
       width="30%"
       center
     >
       <el-form :model="formData" label-width="100px" size="large">
-        <el-form-item label="用户名" prop="name">
+        <el-form-item label="部门名称" prop="name">
           <el-input placeholder="请输入用户名" v-model="formData.name" />
         </el-form-item>
-        <el-form-item label="真实姓名" prop="realname">
-          <el-input placeholder="请输入真实姓名" v-model="formData.realname" />
+        <el-form-item label="部门领导" prop="leader">
+          <el-input placeholder="请输入真实姓名" v-model="formData.leader" />
         </el-form-item>
-        <el-form-item label="密码" prop="password" v-show="isEditRef">
-          <el-input placeholder="请输入密码" v-model="formData.password" type="password" />
-        </el-form-item>
-        <el-form-item label="手机号码" prop="cellphone">
-          <el-input placeholder="请输入手机号码" v-model="formData.cellphone" />
-        </el-form-item>
-        <el-form-item label="选择角色" prop="roleId">
-          <el-select v-model="formData.roleId" placeholder="请选择角色" style="width: 100%">
-            <template v-for="item in entireRoles" :key="item.id">
-              <el-option :label="item.name" :value="item.id"></el-option>
-            </template>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="选择部门" prop="deparmentId">
-          <el-select v-model="formData.departmentId" placeholder="请选择部门" style="width: 100%">
+        <el-form-item label="上级部门" prop="parentId">
+          <el-select v-model="formData.parentId" placeholder="请选择上级" style="width: 100%">
             <template v-for="item in entireDepartments" :key="item.id">
               <el-option :label="item.name" :value="item.id"></el-option>
             </template>
@@ -54,15 +41,12 @@ import { storeToRefs } from 'pinia'
 const centerDialogVisible = ref(false)
 const formData = reactive<any>({
   name: '',
-  realname: '',
-  password: '',
-  cellphone: '',
-  roleId: '',
-  departmentId: ''
+  leader: '',
+  parentId: ''
 })
 //获取role，department数据
 const mainStore = useMainStore()
-const { entireDepartments, entireRoles } = storeToRefs(mainStore)
+const { entireDepartments } = storeToRefs(mainStore)
 //控制密码框显示
 const isEditRef = ref(true)
 const editData = ref()
@@ -89,9 +73,9 @@ const systemStore = useSystemStore()
 function handlerConfirmClick() {
   // 判断状态请求各个接口
   if (!isEditRef.value) {
-    systemStore.updateUserDataAction(editData.value.id, formData)
+    systemStore.editPageDataAction('department', editData.value.id, formData)
   } else {
-    systemStore.newUserDataAction(formData)
+    systemStore.newPageDataAction('department', formData)
   }
 
   centerDialogVisible.value = false

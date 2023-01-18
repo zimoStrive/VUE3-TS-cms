@@ -21,7 +21,6 @@ class HYRequest {
     // 全局的拦截器
     this.instance.interceptors.request.use(
       (config) => {
-        // console.log('全局请求成功拦截')
         return config
       },
       (err) => {
@@ -31,11 +30,9 @@ class HYRequest {
 
     this.instance.interceptors.response.use(
       (res) => {
-        //console.log('全局响应成功拦截')
         return res.data
       },
       (err) => {
-        console.log('全局响应失败拦截')
         return err
       }
     )
@@ -81,6 +78,7 @@ class HYRequest {
   post<T = any>(config: HYRequestConfig<T>) {
     return this.request<T>({ ...config, method: 'POST' })
   }
+
   delete<T = any>(config: HYRequestConfig<T>) {
     return this.request<T>({ ...config, method: 'DELETE' })
   }
