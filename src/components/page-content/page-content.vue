@@ -1,41 +1,54 @@
 <template>
   <div class="content">
     <div class="header">
-      <h3 class="title">部门列表</h3>
-      <el-button type="primary" @click="handleAddUser">新建部门</el-button>
+      <h3 class="title">{{ contentConfig?.header?.title ?? '数据列表' }}</h3>
+      <el-button type="primary" @click="handleAddUser">{{
+        contentConfig?.header?.btnTitle ?? '添加数据'
+      }}</el-button>
     </div>
     <div class="table">
       <el-table :data="pageList" style="width: 100%">
-        <el-table-column align="center" type="selection" label="选择" />
-        <el-table-column align="center" type="index" label="序号" width="70" />
-        <el-table-column align="center" prop="name" label="部门名称" width="110" />
-        <el-table-column align="center" prop="leader" label="领导名称" width="110" />
-        <el-table-column align="center" prop="parentId" label="上级部门" width="120" />
-        <el-table-column align="center" prop="createAt" label="创建时间">
-          <template #default="{ row }">
-            {{ utcFormat(row.createAt) }}
+        <template v-for="item in contentConfig.propsList" :key="item.prop">
+          <template v-if="item.type === 'timer'">
+            <el-table-column v-bind="item">
+              <template #default="{ row }">
+                {{ utcFormat(row.prop) }}
+              </template>
+            </el-table-column>
           </template>
-        </el-table-column>
-        <el-table-column align="center" prop="updateAt" label="更新时间">
-          <template #default="{ row }">
-            {{ utcFormat(row.updateAt) }}
+          <template v-else-if="item.type === 'handler'">
+            <el-table-column align="center" v-bind="item">
+              <template #default="{ row }">
+                <el-button
+                  type="primary"
+                  size="small"
+                  icon="EditPen"
+                  link
+                  @click="EditUserClick(row)"
+                  >编辑</el-button
+                >
+                <el-button
+                  type="danger"
+                  size="small"
+                  icon="Delete"
+                  link
+                  @click="deleteDeleteClick(row.id)"
+                  >删除</el-button
+                >
+              </template>
+            </el-table-column>
           </template>
-        </el-table-column>
-        <el-table-column align="center" prop="address" label="操作" width="180">
-          <template #default="{ row }">
-            <el-button type="primary" size="small" icon="EditPen" link @click="EditUserClick(row)"
-              >编辑</el-button
-            >
-            <el-button
-              type="danger"
-              size="small"
-              icon="Delete"
-              link
-              @click="deleteDeleteClick(row.id)"
-              >删除</el-button
-            >
+          <template v-else-if="item.type === 'custom'">
+            <el-table-column v-bind="item" align="center">
+              <template #default="scope">
+                <slot :name="item.slotName" v-bind="scope" :prop="item.prop"></slot>
+              </template>
+            </el-table-column>
           </template>
-        </el-table-column>
+          <template v-else>
+            <el-table-column align="center" v-bind="item" />
+          </template>
+        </template>
       </el-table>
     </div>
     <div class="pagination">
@@ -58,7 +71,18 @@ import { storeToRefs } from 'pinia'
 import { utcFormat } from '@/utils/format'
 import { ref } from 'vue'
 
+interface IProps {
+  contentConfig: {
+    header?: {
+      title?: string
+      btnTitle?: string
+    }
+    propsList: any[]
+  }
+}
+
 const emit = defineEmits(['newDataClick', 'editDataClick'])
+const props = defineProps<IProps>()
 
 //分页器请求数据
 const currentPage = ref(1)

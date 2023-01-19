@@ -1,31 +1,20 @@
 <template>
   <div class="department">
-    <PageSearch
-      @queryClick="handlerQueryClick"
-      @resetClick="handlerResetClick"
-      :search-config="searchConfig"
-    />
+    <PageSearch @queryClick="handlerQueryClick" @resetClick="handlerResetClick" />
     <PageContent
       ref="contentRef"
       @newDataClick="handlerNewDataClick"
       @editDataClick="handlerEditDataClick"
-      :content-config="contentConfig"
-    >
-      <template #leader="scope">
-        <span class="textColor">--{{ scope.row[scope.prop] }}</span>
-      </template>
-    </PageContent>
+    />
     <PageModel ref="modelRef" />
   </div>
 </template>
 
 <script setup lang="ts" name="department">
-import PageSearch from '@/components/page-search/page-search.vue'
-import PageContent from '@/components/page-content/page-content.vue'
+import PageSearch from './c-cpns/page-search.vue'
+import PageContent from './c-cpns/page-content.vue'
 import PageModel from './c-cpns/page-modal.vue'
 import { ref } from 'vue'
-import searchConfig from './config/search.config'
-import contentConfig from './config/content.config'
 
 //contenth组件操作
 const contentRef = ref<InstanceType<typeof PageContent>>()
@@ -46,8 +35,4 @@ function handlerEditDataClick(formData: any) {
   modelRef.value?.setDialogVisible(true, formData)
 }
 </script>
-<style scoped>
-.textColor {
-  color: yellowgreen;
-}
-</style>
+<style scoped></style>

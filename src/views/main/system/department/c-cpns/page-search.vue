@@ -52,11 +52,9 @@ const searchForm = reactive({
 // 2.监听按钮的点击
 const formRef = ref<InstanceType<typeof ElForm>>()
 function handleResetClick() {
-  console.log(formRef.value)
   formRef.value?.resetFields()
   emit('resetClick')
 }
-
 function handleQueryClick() {
   emit('queryClick', searchForm)
 }
@@ -69,7 +67,7 @@ function handleQueryClick() {
   border-radius: 5px;
 
   .el-form-item {
-    padding: 20px 0;
+    padding: 20px 40px;
     margin-bottom: 0;
   }
 }
