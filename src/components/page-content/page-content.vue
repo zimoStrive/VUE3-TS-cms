@@ -73,6 +73,7 @@ import { ref } from 'vue'
 
 interface IProps {
   contentConfig: {
+    pageName: string
     header?: {
       title?: string
       btnTitle?: string
@@ -96,7 +97,7 @@ function getPageList(queryInfo: any = {}) {
   const size = pageSize.value
   const offset = (currentPage.value - 1) * size
   //带上参数发请求
-  systemStore.getPageListDataAction('department', { size, offset, ...queryInfo })
+  systemStore.getPageListDataAction(props.contentConfig.pageName, { size, offset, ...queryInfo })
 }
 
 getPageList()
@@ -119,7 +120,7 @@ function handleResetClick() {
 
 //删除用户
 function deleteDeleteClick(id: number) {
-  systemStore.deletePageDataAction('department', id)
+  systemStore.deletePageDataAction(props.contentConfig.pageName, id)
 }
 
 //新建用户

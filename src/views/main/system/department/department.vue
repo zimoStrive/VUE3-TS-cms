@@ -15,36 +15,42 @@
         <span class="textColor">--{{ scope.row[scope.prop] }}</span>
       </template>
     </PageContent>
-    <PageModel ref="modelRef" />
+    <PageModel :modal-config="modalConfigRef" ref="modelRef" />
   </div>
 </template>
 
 <script setup lang="ts" name="department">
 import PageSearch from '@/components/page-search/page-search.vue'
+import PageModel from '@/components/page-modal/page-modal.vue'
 import PageContent from '@/components/page-content/page-content.vue'
-import PageModel from './c-cpns/page-modal.vue'
-import { ref } from 'vue'
+import { computed } from 'vue'
 import searchConfig from './config/search.config'
 import contentConfig from './config/content.config'
+import modalConfig from './config/modal.config'
+import useMainStore from '@/store/main/main'
+import usePageContent from '@/hooks/usePageContent'
+import usePageModal from '@/hooks/usePageModal'
+
+//对modalCofig进行操作
+const modalConfigRef = computed(() => {
+  const mainStore = useMainStore()
+  const departments = mainStore.entireDepartments.map((item) => {
+    return { label: item.name, value: item.id }
+  })
+  modalConfig.formItems.forEach((item) => {
+    if (item.prop === 'parentId') {
+      item.options?.push(...departments)
+    }
+  })
+
+  return modalConfig
+})
 
 //contenth组件操作
-const contentRef = ref<InstanceType<typeof PageContent>>()
-function handlerQueryClick(queryInfo: any) {
-  contentRef?.value.getPageList(queryInfo)
-}
-function handlerResetClick() {
-  contentRef?.value.getPageList()
-}
+const { contentRef, handlerQueryClick, handlerResetClick } = usePageContent()
 
 //modal的逻辑处理
-const modelRef = ref<InstanceType<typeof PageModel>>()
-function handlerNewDataClick() {
-  modelRef.value?.setDialogVisible()
-}
-
-function handlerEditDataClick(formData: any) {
-  modelRef.value?.setDialogVisible(true, formData)
-}
+const { modelRef, handlerNewDataClick, handlerEditDataClick } = usePageModal()
 </script>
 <style scoped>
 .textColor {
