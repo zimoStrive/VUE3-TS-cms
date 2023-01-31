@@ -42,7 +42,6 @@ const modalConfigRef = computed(() => {
       item.options?.push(...departments)
     }
   })
-
   return modalConfig
 })
 

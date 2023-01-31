@@ -2,7 +2,7 @@
   <div class="modal">
     <el-dialog
       v-model="centerDialogVisible"
-      :title="isEditRef ? '新建部门' : '编辑部门'"
+      :title="isEditRef ? modalConfig.header.newTitle : modalConfig.header.editTitle"
       width="30%"
       center
     >
