@@ -2,7 +2,7 @@ import { accountLogin, getUserById, getRoleMenus } from '@/service/login/login'
 import { defineStore } from 'pinia'
 import type { IAccount } from '@/types'
 import { localCache } from '@/utils/cache'
-import { mapMenusToRoutes } from '@/utils/map-menu'
+import { mapMenusToRoutes, mapMenuToPersssions } from '@/utils/map-menu'
 import router from '@/router'
 import useMainStore from '../main/main'
 
@@ -10,19 +10,20 @@ interface ILoginState {
   token: string
   userInfo: any
   userMenus: any[]
+  permissions: string[]
 }
 const useLoginStore = defineStore('login', {
   state: (): ILoginState => ({
     token: '',
     userInfo: {},
-    userMenus: []
+    userMenus: [],
+    permissions: []
   }),
 
   actions: {
     async accountLoginAction(account: IAccount) {
       //1.获取登录信息
       const loginRes = await accountLogin(account)
-      console.log(loginRes)
       const { id, token } = loginRes.data
       this.token = token
 
@@ -39,6 +40,11 @@ const useLoginStore = defineStore('login', {
       const menuRes = await getRoleMenus(roleId)
       this.userMenus = menuRes.data
       localCache.setCache('userMenus', this.userMenus)
+
+      //获取按钮权限信息
+      const permissions = mapMenuToPersssions(this.userMenus)
+      this.permissions = permissions
+      localCache.setCache('permissions', this.permissions)
 
       //获取所有数据
       const mainStore = useMainStore()

@@ -75,3 +75,43 @@ export function mapPathToBreadcrumb(path: string, userMenus: any[]) {
   }
   return breadcrumbs
 }
+
+/**
+ *菜单映射的id列表
+ * @param menuList
+ */
+export function mapMenuListToIds(menuList: any[]) {
+  const ids: number[] = []
+
+  function recurseGetId(menus: any[]) {
+    for (const item of menus) {
+      if (item.children) {
+        recurseGetId(item.children)
+      } else {
+        ids.push(item.id)
+      }
+    }
+  }
+  recurseGetId(menuList)
+  return ids
+}
+
+/**
+ *从菜单映射到按钮的权限
+ * @param userMenus 菜单的列表
+ * @returns 权限的字符串数组
+ */
+export function mapMenuToPersssions(userMenus: any) {
+  const permissions: string[] = []
+  function recurseGetPermission(menuList: any[]) {
+    for (const menu of menuList) {
+      if (menu.type === 3) {
+        permissions.push(menu.permission)
+      } else {
+        recurseGetPermission(menu.children ?? [])
+      }
+    }
+  }
+  recurseGetPermission(userMenus)
+  return permissions
+}

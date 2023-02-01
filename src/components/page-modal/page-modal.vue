@@ -32,6 +32,9 @@
                 end-placeholder="结束时间"
               />
             </template>
+            <template v-if="item.type === 'custom'">
+              <slot :name="item.slotName"></slot>
+            </template>
           </el-form-item>
         </template>
       </el-form>
@@ -62,9 +65,9 @@ interface IProps {
     }
     formItems: any[]
   }
+  otherInfo?: any
 }
 const props = defineProps<IProps>()
-console.log(props.modalConfig)
 
 const centerDialogVisible = ref(false)
 const formData = reactive<any>({
@@ -99,11 +102,16 @@ defineExpose({ setDialogVisible })
 //点击确定按钮
 const systemStore = useSystemStore()
 function handlerConfirmClick() {
+  //整理数据
+  let infoData = formData
+  if (props.otherInfo) {
+    infoData = { ...formData, ...props.otherInfo }
+  }
   // 判断状态请求各个接口
   if (!isEditRef.value) {
-    systemStore.editPageDataAction(props.modalConfig.pageName, editData.value.id, formData)
+    systemStore.editPageDataAction(props.modalConfig.pageName, editData.value.id, infoData)
   } else {
-    systemStore.newPageDataAction(props.modalConfig.pageName, formData)
+    systemStore.newPageDataAction(props.modalConfig.pageName, infoData)
   }
 
   centerDialogVisible.value = false

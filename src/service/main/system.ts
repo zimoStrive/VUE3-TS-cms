@@ -33,3 +33,6 @@ export const newPageData = (pageName: string, dataInfo: any) =>
 
 export const editPageData = (pageName: string, id: number, dataInfo: any) =>
   request.patch({ url: `/${pageName}/${id}`, data: dataInfo })
+
+/** 获取菜单的信息 */
+export const getMenuData = () => request.post({ url: '/menu/list' })

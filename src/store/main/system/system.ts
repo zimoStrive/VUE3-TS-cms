@@ -54,7 +54,7 @@ const useSystemStore = defineStore('system', {
     async getPageListDataAction(pageName: string, queryInfo: any) {
       const res = await getPageListData(pageName, queryInfo)
       this.pageList = res.data.list
-      this.pageTotalCount = res.data.totalCount
+      this.pageTotalCount = parseInt(res.data.totalCount)
     },
 
     //删除操作
