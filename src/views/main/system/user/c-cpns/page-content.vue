@@ -2,7 +2,7 @@
   <div class="content">
     <div class="header">
       <h3 class="title">用户列表</h3>
-      <el-button type="primary" @click="handleAddUser">新建用户</el-button>
+      <el-button type="primary" @click="handleAddUser" v-if="isCreate">新建用户</el-button>
     </div>
     <div class="table">
       <el-table :data="usersList" style="width: 100%">
@@ -30,7 +30,13 @@
         </el-table-column>
         <el-table-column align="center" prop="address" label="操作" width="180">
           <template #default="{ row }">
-            <el-button type="primary" size="small" icon="EditPen" link @click="EditUserClick(row)"
+            <el-button
+              type="primary"
+              size="small"
+              icon="EditPen"
+              link
+              @click="EditUserClick(row)"
+              v-if="isUpdate"
               >编辑</el-button
             >
             <el-button
@@ -39,6 +45,7 @@
               icon="Delete"
               link
               @click="deleteUserClick(row.id)"
+              v-if="isDelete"
               >删除</el-button
             >
           </template>
@@ -64,8 +71,15 @@ import useSystemStore from '@/store/main/system/system'
 import { storeToRefs } from 'pinia'
 import { utcFormat } from '@/utils/format'
 import { ref } from 'vue'
+import usePermission from '@/hooks/usePermission'
 
 const emit = defineEmits(['newDataClick', 'editDataClick'])
+
+//用户权限判断
+const isCreate = usePermission('users', 'create')
+const isDelete = usePermission('users', 'delete')
+const isQuery = usePermission('users', 'query')
+const isUpdate = usePermission('users', 'update')
 
 //分页器请求数据
 const currentPage = ref(1)
@@ -75,6 +89,9 @@ const systemStore = useSystemStore()
 
 //获取用户列表的回调
 function getUserList(queryInfo: any = {}) {
+  //判读是否有查询权限
+  if (!isQuery) return
+
   //获取size和offset
   const size = pageSize.value
   const offset = (currentPage.value - 1) * size

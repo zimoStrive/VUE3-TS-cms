@@ -33,11 +33,10 @@ import searchConfig from './config/search.config'
 
 import pageContent from '@/components/page-content/page-content.vue'
 import contentConfig from './config/content.config'
+import usePageContent from '@/hooks/usePageContent'
 
 import pageModal from '@/components/page-modal/page-modal.vue'
 import modalConfig from './config/modal.config'
-
-import usePageContent from '@/hooks/usePageContent'
 import usePageModal from '@/hooks/usePageModal'
 
 import useMainStore from '@/store/main/main'
@@ -49,7 +48,10 @@ import { mapMenuListToIds } from '@/utils/map-menu'
 //contenth组件操作
 const { contentRef, handlerQueryClick, handlerResetClick } = usePageContent()
 //modal的逻辑处理
-const { modelRef, handlerNewDataClick, handlerEditDataClick } = usePageModal(editCallback)
+const { modelRef, handlerNewDataClick, handlerEditDataClick } = usePageModal(
+  newCallback,
+  editCallback
+)
 
 // 菜单的展示
 const mainStore = useMainStore()
@@ -63,6 +65,12 @@ const treeRef = ref<InstanceType<typeof ElTree>>()
 function editCallback(data: any) {
   nextTick(() => {
     treeRef.value?.setCheckedKeys(mapMenuListToIds(data.menuList))
+  })
+}
+//解决tree组件回显
+function newCallback() {
+  nextTick(() => {
+    treeRef.value?.setCheckedKeys([])
   })
 }
 </script>

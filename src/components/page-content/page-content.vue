@@ -2,7 +2,7 @@
   <div class="content">
     <div class="header">
       <h3 class="title">{{ contentConfig?.header?.title ?? '数据列表' }}</h3>
-      <el-button type="primary" @click="handleAddUser">{{
+      <el-button type="primary" @click="handleAddUser" v-if="isCreate">{{
         contentConfig?.header?.btnTitle ?? '添加数据'
       }}</el-button>
     </div>
@@ -25,6 +25,7 @@
                   icon="EditPen"
                   link
                   @click="EditUserClick(row)"
+                  v-if="isUpdate"
                   >编辑</el-button
                 >
                 <el-button
@@ -33,6 +34,7 @@
                   icon="Delete"
                   link
                   @click="deleteDeleteClick(row.id)"
+                  v-if="isDelete"
                   >删除</el-button
                 >
               </template>
@@ -69,6 +71,7 @@
 import useSystemStore from '@/store/main/system/system'
 import { storeToRefs } from 'pinia'
 import { utcFormat } from '@/utils/format'
+import usePermission from '@/hooks/usePermission'
 import { ref } from 'vue'
 
 interface IProps {
@@ -86,14 +89,33 @@ interface IProps {
 const emit = defineEmits(['newDataClick', 'editDataClick'])
 const props = defineProps<IProps>()
 
+// 判断是否有增删改查的权限
+const isDelete = usePermission(props.contentConfig.pageName, 'delete')
+const isCreate = usePermission(props.contentConfig.pageName, 'create')
+const isUpdate = usePermission(props.contentConfig.pageName, 'update')
+const isQuery = usePermission(props.contentConfig.pageName, 'query')
+
 //分页器请求数据
 const currentPage = ref(1)
 const pageSize = ref(5)
-//发起action请求
 const systemStore = useSystemStore()
+
+//解决分页增加数据跳转到第一页
+systemStore.$onAction(({ name, after }) => {
+  after(() => {
+    if (
+      name === 'deletePageDataAction' ||
+      name === 'editPageDataAction' ||
+      name === 'newPageDataAction'
+    ) {
+      currentPage.value = 1
+    }
+  })
+})
 
 //获取用户列表的回调
 function getPageList(queryInfo: any = {}) {
+  if (!isQuery) return
   //获取size和offset
   const size = pageSize.value
   const offset = (currentPage.value - 1) * size

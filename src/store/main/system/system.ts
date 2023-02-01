@@ -11,6 +11,7 @@ import {
 import { defineStore } from 'pinia'
 import type { ISystemState } from './type'
 import { ElMessage } from 'element-plus'
+import useMainStore from '../main'
 
 const useSystemStore = defineStore('system', {
   state: (): ISystemState => ({
@@ -63,6 +64,10 @@ const useSystemStore = defineStore('system', {
       //重新获取列表数据
       this.getPageListDataAction(pageName, { offset: 0, size: 10 })
       console.log(res)
+
+      //获取完整数据
+      const mainStore = useMainStore()
+      mainStore.fetchEntireDateAction()
     },
 
     //编辑操作
@@ -71,6 +76,10 @@ const useSystemStore = defineStore('system', {
       //重新获取列表数据
       this.getPageListDataAction(pageName, { offset: 0, size: 10 })
       console.log(res)
+
+      //获取完整数据
+      const mainStore = useMainStore()
+      mainStore.fetchEntireDateAction()
     },
 
     //新增操作
@@ -79,6 +88,10 @@ const useSystemStore = defineStore('system', {
       //重新获取列表数据
       this.getPageListDataAction(pageName, { offset: 0, size: 10 })
       console.log(res)
+
+      //获取完整数据
+      const mainStore = useMainStore()
+      mainStore.fetchEntireDateAction()
     }
   }
 })
