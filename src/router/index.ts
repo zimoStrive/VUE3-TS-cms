@@ -26,6 +26,65 @@ const router = createRouter({
   ]
 })
 
+export const asyncRoutes = [
+  {
+    path: '/main/analysis/dashboard',
+    component: () => import('@/views/main/analysis/dashboard/dashboard.vue')
+  },
+  {
+    path: '/main/analysis/overview',
+    component: () => import('@/views/main/analysis/overview/overview.vue')
+  },
+  {
+    path: '/main/product/category',
+    //name: 'category',
+    component: () => import('@/views/main/product/category/category.vue')
+    //children: []
+  },
+  {
+    path: '/main/story/chat',
+    //name: 'category',
+    component: () => import('@/views/main/story/chat/chat.vue')
+    //children: []
+  },
+  {
+    path: '/main/product/goods',
+    //name: 'category',
+    component: () => import('@/views/main/product/goods/goods.vue')
+    //children: []
+  },
+  {
+    path: '/main/story/list',
+    //name: 'category',
+    component: () => import('@/views/main/story/list/list.vue')
+    //children: []
+  },
+  {
+    path: '/main/system/department',
+    //name: 'category',
+    component: () => import('@/views/main/system/department/department.vue')
+    //children: []
+  },
+  {
+    path: '/main/system/menu',
+    //name: 'category',
+    component: () => import('@/views/main/system/menu/menu.vue')
+    //children: []
+  },
+  {
+    path: '/main/system/role',
+    //name: 'category',
+    component: () => import('@/views/main/system/role/role.vue')
+    //children: []
+  },
+  {
+    path: '/main/system/user',
+    //name: 'category',
+    component: () => import('@/views/main/system/user/user.vue')
+    //children: []
+  }
+]
+
 router.beforeEach((to) => {
   const token = localCache.getCache('token')
   if (to.path.startsWith('/main') && !token) return '/login'

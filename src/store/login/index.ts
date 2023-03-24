@@ -39,6 +39,7 @@ const useLoginStore = defineStore('login', {
       const roleId = this.userInfo.role.id
       const menuRes = await getRoleMenus(roleId)
       this.userMenus = menuRes.data
+      console.log(menuRes.data)
       localCache.setCache('userMenus', this.userMenus)
 
       //获取按钮权限信息

@@ -1,31 +1,30 @@
 import type { RouteRecordRaw } from 'vue-router'
+import { asyncRoutes } from '@/router/index'
 
-function loadLocalRoutes() {
-  //动态获取所有路由对象，放到数组中，
-  //路由对象都是在独立文件中
-  //从文件中将所有路由对象先读取数组中
-  const localRoutes: RouteRecordRaw[] = []
-  //读取router/main/所有ts文件
-  const files: Record<string, any> = import.meta.glob('../router/main/**/*.ts', { eager: true })
-  // console.log(files)
+//  function loadLocalRoutes() {
+//   //动态获取所有路由对象，放到数组中，
+//   //路由对象都是在独立文件中
+//   //从文件中将所有路由对象先读取数组中
+//   const localRoutes: RouteRecordRaw[] = []
+//   //读取router/main/所有ts文件
+//   const files: Record<string, any> = import.meta.glob('../router/main/**/*.ts', { eager: true })
+//   // console.log(files)
 
-  //将加载的对象放到localRoutes
-  for (const key in files) {
-    const module = files[key].default
-    localRoutes.push(module)
-  }
-  return localRoutes
-}
+//   //将加载的对象放到localRoutes
+//   for (const key in files) {
+//     const module = files[key].default
+//     localRoutes.push(module)
+//   }
+//   return localRoutes
+// }
 
 export let firstMenu: any = null
 export function mapMenusToRoutes(userMenus: any[]) {
-  //加载本地路由
-  const localRoutes = loadLocalRoutes()
   //根据菜单去匹配正确的路由
   const routes: RouteRecordRaw[] = []
   for (const menu of userMenus) {
     for (const submenu of menu.children) {
-      const route = localRoutes.find((item) => item.path === submenu.url)
+      const route = asyncRoutes.find((item) => item.path === submenu.url)
       if (route) {
         //给route的顶层菜单增加重定向功能（但是只需要添加一次即可）
         if (!routes.find((item) => item.path === menu.url)) {

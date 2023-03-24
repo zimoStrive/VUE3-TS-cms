@@ -48,7 +48,6 @@ watch(isKeep, (newVal) => {
 const accountRef = ref<InstanceType<typeof PanelAccount>>()
 
 function loginAction() {
-  console.log('登录') 
   accountRef.value?.loginAction(isKeep.value)
 }
 </script>
